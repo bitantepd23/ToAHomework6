@@ -6,8 +6,7 @@ public class main {
 		
 		Heap heap = new Heap();
 		BinarySearchTree<Integer> bstObj = new BinarySearchTree<>();
-		
-		
+	
 		bstObj.insertNode(100);
 		bstObj.insertNode(122);
 		bstObj.insertNode(77);
