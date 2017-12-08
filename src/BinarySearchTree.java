@@ -1,134 +1,199 @@
 import java.io.*;
 
-public class BinarySearchTree<E> {
+public class BinarySearchTree {
 
-	protected Node<E> root;
-	
-	public BinarySearchTree(){
-		
-		this.root = null;
-		
+	Node root;
+	 public boolean keyFound = false;
+
+	// return the height of the node to build the AVL tree
+	int height(Node node) {
+		// base case
+		if (node == null) {
+			return 0;
+		}
+
+		return node.height;
 	}
-	
-	public BinarySearchTree(Node<E> root){
-		
-		this.root = root;
-		
+
+	// balance the tree of the tree and its children
+	int getBalance(Node n) {
+		if (n == null) {
+			return 0;
+		}
+
+		return height(n.left) - height(n.right);
 	}
-	
-	public BinarySearchTree(E data, BinarySearchTree<E> leftTree, BinarySearchTree<E> rightTree){
-		
-		this.root = new Node<E>(data);
-		
-		if (leftTree != null){
-			root.leftNode = leftTree.root;
-		}
-		if (rightTree != null){
-			root.rightNode = rightTree.root;
-		}
-		
-	}
-	
-	public void insertNode(E insertValue){
-		
-		if (this.root == null){
-			this.root = new Node<E> (insertValue);
-		}
-		else {
-			this.root.insert(insertValue);
-		}
-	}
-	
-	public BinarySearchTree<E> getLeftTree(){
-		
-		if (this.root != null && root.leftNode != null){
-			return new BinarySearchTree<E>(root.leftNode);
-		}
-		else {
-			return null;
-		}
-	}
-	
-	public BinarySearchTree<E> getRightTree(){
-		
-		if (this.root != null && root.rightNode != null){
-			return new BinarySearchTree<E>(root.rightNode);
-		}
-		else {
-			return null;
-		}
-	}
-	
-	public Node<E> search(Node<E> root, E keyData) {
-		
-		if (root == null) {
-			System.out.println(keyData+" was not found in this tree.");
-			return root;
-		}
-		
-		if (root.data == keyData) {
-			System.out.println(keyData+" was found in this tree.");
-			return root;
-		}
-		
-		else if (root.leftNode != null && root.rightNode != null) {
-		// if key is less than current root
-		if ((Integer) root.data > (Integer) keyData)
-			return search(root.leftNode, keyData);
-		
-		// if key is greater than current root
-		if ((Integer) root.data < (Integer) keyData)
-			return search(root.rightNode, keyData);
-		}
-		
-		return search(root.rightNode, keyData);
+
+	// rotate right in a left left or left right instance
+	Node rightRotate(Node NR) {
+		Node x = NR.left;
+		Node subtree = x.right;
+		// System.out.println(x.key + " height: " + x.height);
+
+		// System.out.print("Node: " + x.right.key + "is rotated to node: ");
+		// rotate
+		x.right = NR.left;
+		// System.out.println(NR.left.key);
+		subtree.left = subtree;
+
+		// change the heights
+		return x;
 
 	}
+
+	// rotate let in a right right or right left
+	Node leftRotate(Node x) {
+		Node y = x.right;
+		Node subtree = y.left;
+
+		// Perform rotation
+		y.left = x;
+		x.right = subtree;
+
+		// Update heights
+		int xl = height(x.left);
+		int yl = height(y.left);
+		int xr = height(x.right);
+		int yr = height(y.right);
+
+		x.height = Math.max(xl, xr) + 1;
+		y.height = Math.max(yl, yl) + 1;
+
+		// Return new root
+		return y;
+	}
+
+	Node search(int searchVal, Node n) {
+		if (n != null) {
+			if (n.key == searchVal) {
+				keyFound = true;
+				foundNodePrint(n);
+				return n;
+			}
+			Node foundNode = search(searchVal, n.left);
+			if (foundNode == null) {
+				foundNode = search(searchVal, n.right);
+			}
+
+			return foundNode;
+
+		} else {
+
+			return null;
+		}
+
+	}
+
+	void foundNodePrint(Node n) {
+		System.out.println("Found: " + n.key);
+
+	}
 	
-	public void searchResponse(boolean searchStatement) {
+	// create a binary serach tree
+	Node insertNode(Node node, int insertValue) {
+		// base case
+		if (node == null) {
+			return(new Node(insertValue));
+		}
 		
-		if (searchStatement == true) {
-			System.out.println("Value exists in tree.");
-			
+		// left node
+		if (insertValue < node.key) {
+			node.left = insertNode(node.left, insertValue);
 		}
-			
-	}
-	public String getInOrderTraversal (BinarySearchTree<E> tree){
-		
-		if (tree == null){
-			return "";
+		// right node 
+		else if (insertValue > node.key) {
+			node.right = insertNode(node.right, insertValue);
 		}
-		else {
-			return (getInOrderTraversal(tree.getLeftTree())+
-					tree.root.data.toString()+" "+
-					getInOrderTraversal(tree.getRightTree()));
-		}
+			return node;
 	}
 	
-	public String getPreOrderTraversal(BinarySearchTree<E> tree){
-		
-		if (tree == null){
-			return "";
+
+	// create a recursive function to insert
+	// this function includes the building and execution of the AVL tree
+	Node insertNodeAVL(Node node, int insertValue) {
+
+		// base case
+		if (node == null) {
+			return (new Node(insertValue));
 		}
-		
-		else {
-			return (tree.root.data.toString()+" "+
-					getPreOrderTraversal(tree.getLeftTree())+
-					getPreOrderTraversal(tree.getRightTree()));
-		}		
+
+		// insert the new insertValue
+		// left node
+		if (insertValue < node.key) {
+			node.left = insertNodeAVL(node.left, insertValue);
+		}
+		// right node
+		else if (insertValue > node.key) {
+			node.right = insertNodeAVL(node.right, insertValue);
+		} else {
+			return node;
+		}
+
+		// get the height value of the right and left nodes
+		int l = height(node.left);
+		int r = height(node.right);
+
+		// update the height of the ancestor node
+		node.height = 1 + Math.max(l, r);
+
+		int balance = getBalance(node);
+
+		// if the node is unbalanced then balance it
+		// thanks to geeksforgeeks.com for the help and understanding of this
+
+		// left left case
+		if (balance > 1 && insertValue < node.left.key) {
+			return rightRotate(node);
+		}
+
+		// right right case
+		if (balance < -1 && insertValue > node.right.key) {
+			return leftRotate(node);
+
+		}
+
+		// left right case
+		if (balance > 1 && insertValue > node.left.key) {
+			return rightRotate(node);
+		}
+
+		// right left case
+		if (balance < -1 && insertValue < node.right.key) {
+			return leftRotate(node);
+		}
+
+		// then the tree is balanced
+		return node;
+
 	}
-	
-	public String getPostOrderTraversal(BinarySearchTree<E> tree){
-		
-		if (tree == null){
-			return "";
+
+	// print the traversals
+
+	// BST inorder
+	void inOrder(Node node) {
+		if (node != null) {
+			inOrder(node.left);
+			System.out.print(node.key + "  ");
+			inOrder(node.right);
 		}
-		
-		else {
-			return (getPostOrderTraversal(tree.getLeftTree())+
-					getPostOrderTraversal(tree.getRightTree())+
-					tree.root.data.toString()+" ");
-		}
-		
 	}
+
+	// BST preorder
+	void preOrder(Node node) {
+		if (node != null) {
+			System.out.print(node.key + "  ");
+			preOrder(node.left);
+			preOrder(node.right);
+		}
+	}
+
+	// BST postorder
+	public void postOrder(Node node) {
+		if (node != null) {
+			postOrder(node.left);
+			postOrder(node.right);
+			System.out.print(node.key + "  ");
+		}
+	}
+
 }

@@ -1,9 +1,18 @@
-public class Node<E> {
+public class Node {
 
-	protected Node<E> leftNode, rightNode;
-	E data;
-	boolean isVisited;
+	//	protected Node<E> leftNode, rightNode;
+	// 	E data;
+	// boolean isVisited;
 	
+	int key, height;
+	Node left, right;
+
+	Node(int d) {
+		key = d;
+		height = 1;
+	}
+	
+	/*
 	public Node(E data) {
 		this.data = data;
 		this.leftNode = null;
@@ -11,9 +20,10 @@ public class Node<E> {
 		this.isVisited = false;
 	}
 	
+	
 	public void insert(E value) {
 		
-		boolean insertLeftChild;
+		boolean insertLeftChild; // alternates so the node can be 
 		
 		if ((Integer) value < (Integer) this.data) {
 			insertLeftChild = true;
@@ -35,4 +45,7 @@ public class Node<E> {
 				rightNode.insert(value);
 		}
 	}
+	*/
+	
+	
 }
