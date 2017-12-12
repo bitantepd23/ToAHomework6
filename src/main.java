@@ -6,7 +6,10 @@ public class main {
 	public static void main(String[] args) {
 		// get the input from the user for the key search
 		Scanner input = new Scanner(System.in);
-
+		
+		
+		
+		
 		// Heap
 		System.out.println("********** Heap **********");
 		Heap heap = new Heap();
@@ -14,7 +17,9 @@ public class main {
 		heap.printHeap();
 		System.out.println("\nPost HeapSort");
 		heap.heapSort();
+		
 		heap.printHeap();
+		
 
 		int[] testArray = { 58, 288, 358, 468, 640, 694, 697, 728, 832, 860, 1379, 1397, 1479, 1488, 1492, 1531, 1676,
 				1731, 1853, 1872, 1879, 1992, 2293, 2386, 2570, 2748, 3031, 3059, 3163, 3194, 3292, 3433, 3581, 3586,
@@ -24,6 +29,9 @@ public class main {
 				8419, 8547, 9001, 9032, 9120, 9182, 9310, 9314, 9338, 9355, 9511, 9512, 9529, 9772, 9854 };
 
 		
+		// start timer for heap sort
+				long startTimeHeap = System.nanoTime();
+				
 		Heap testHeap = new Heap(testArray);
 		System.out.println("\n  Initialized Test Heap");
 		testHeap.heapSort();
@@ -32,6 +40,16 @@ public class main {
 		System.out.println("\n  Post removal");
 		testHeap.printHeap();
 
+		long endTimeHeap = System.nanoTime();
+
+		long Heapduration = (endTimeHeap - startTimeHeap);
+
+		System.out.println("Time for 10,000 ints for Heap sort " + Heapduration / 1000000 + " milliseconds");// divide by
+																											// 1000000
+																											// to get
+																											// milliseconds.
+		System.out.println();
+
 		System.out.println("***************************");
 		System.out.println();
 		System.out.println();
@@ -39,63 +57,78 @@ public class main {
 		System.out.println("************** BST **************");
 
 		
-		BinarySearchTree t = new BinarySearchTree();
+		
+		BinarySearchTree tree = new BinarySearchTree();
+		// start timer for BST 
+		long startTimeBST = System.nanoTime();
+		
+		
+		
+		
+		// bst tree
+		for (int i = 0; i < testArray.length - 1; i++) {
+			tree.BSTinsert(testArray[i]);
+		}
+		
+		
+		long endTimeBST = System.nanoTime();
+		
+		System.out.println("Enter a value to find ");
+		int keyToFind = input.nextInt();
+
+		tree.search(keyToFind, tree.root);
+		if (tree.keyFound == false) {
+			System.out.println(keyToFind + " was not found.");
+
+		}
+
+		long BSTduration = (endTimeBST - startTimeBST);
+
+		
+		
+		System.out.println("Inorder traversal of the BST Tree ");
+			tree.inOrder(tree.root);
+		System.out.println();
+		
+		
+		System.out.println("Time for 10,000 ints for BST sort " + BSTduration / 1000000 + " milliseconds");// divide by
+		// 1000000
+		// to get
+		// milliseconds.
+		System.out.println();
+		System.out.println();
 		
 
-		System.out.println("Binary Search tree ");
-		  t.root = t.insertNode(t.root, 1); 
-		  t.root = t.insertNode(t.root, 3); 
-		  t.root = t.insertNode(t.root, 2);
-		  t.root = t.insertNode(t.root, 4);
-		  t.root = t.insertNode(t.root, 5);
-		  t.root = t.insertNode(t.root, 10);
-		  t.root = t.insertNode(t.root, 17); 
-		  t.root = t.insertNode(t.root, 40);
-		  t.root = t.insertNode(t.root, 65);
-		  
-		  System.out.println("Enter a value to find ");
-			int keyToFind = input.nextInt();
+		// start timer for BST
+		long startTimeAVL = System.nanoTime();
+		// avl tree
+		for (int i = 0; i < testArray.length - 1; i++) {
+			tree.insert(testArray[i]);
+		}
+		
+		long endTimeAVL = System.nanoTime();
 
-			t.search(keyToFind, t.root);
-			if (t.keyFound == false) {
-				System.out.println(keyToFind + " was not found.");
-
-			}
-		  
-		  System.out.println("Inorder traversal of the BST Tree ");
-			t.inOrder(t.root);
-			System.out.println();
-			
-			//******************* AVL TREE ************
-			
-			//System.out.println(testArray.length);
-			for (int i = 0; i < 10; i++) {
-				//t.root = t.insertNodeAVL(t.root, testArray[i]);
-			}
-			
-			// only works when the input array is length 10
-			int[] ta = { 10, 20, 13, 234, 123, 3453, 345, 1256 };
-			
-			for (int i = 0; i < ta.length -1; i++) {
-			//	t.root = t.insertNodeAVL(t.root, ta[i]);
-			}
-		 
-
-		// find the entered key
+		long AVLduration = (endTimeAVL - startTimeAVL);
 
 		
 
 		System.out.println("Inorder traversal of the AVL Tree ");
-		t.inOrder(t.root);
+		tree.inOrder(tree.root);
 		System.out.println();
 
 		System.out.println("PostOrder taversal of the AVL Tree");
-		t.postOrder(t.root);
+		tree.postOrder(tree.root);
 		System.out.println();
 
 		System.out.println("PreOrder traversal of the AVL Tree");
-		t.preOrder(t.root);
+		tree.preOrder(tree.root);
 		System.out.println();
+		
+		
+		System.out.println("Time for 10,000 ints for AVL  " + AVLduration / 1000000 + " milliseconds");// divide by
+		// 1000000
+		// to get
+		// milliseconds.
 
 		System.out.println("*********************************");
 

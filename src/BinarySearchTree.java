@@ -3,7 +3,224 @@ import java.io.*;
 public class BinarySearchTree {
 
 	Node root;
-	 public boolean keyFound = false;
+	public boolean keyFound = false;
+	
+
+	
+
+	// constructor 
+	public BinarySearchTree() {
+		root = null;
+	}
+	
+	
+	// basic BST function 
+	
+	public void BSTinsert(int insertValue){
+		root = insertBSTREC (root, insertValue);
+	}
+	
+	
+	private Node insertBSTREC(Node current, int inVal) {
+		//perform BST insertion
+		if (current == null){
+			current = new Node(inVal);
+			return current;
+		}
+		
+		// left insert
+		if (inVal < current.InsertValue){
+			current.left = insertBSTREC(current.left, inVal);
+		}
+		else if (inVal > current.InsertValue) {
+			current.right = insertBSTREC(current.right, inVal);
+		}
+		
+		// insert right
+		return current; 
+	
+
+		
+	}
+	
+	
+	private int getHeight(Node current){
+		if (current == null) {
+			return -1;
+		}
+		else
+			return current.height;
+	}
+	
+	private int max(int a, int b) {
+		if (a > b) {
+			return a;
+		} else {
+			return b;
+		}
+		
+	}
+	
+	private void updateHeight(Node current){
+		current.height = max(getHeight(current.left), getHeight(current.right)) + 1;
+	}
+	
+private Node rotateRight(Node y){
+		
+		Node x = y.left;
+		Node T = x.right; //subtree that is swapped from one node to another
+		
+		//rotation
+		x.right = y;
+		y.left = T;
+		
+		//update heights
+		updateHeight(x);
+		updateHeight(y);
+		
+		//return new root
+		return x;
+	}
+	
+	private Node rotateLeft(Node x){
+		
+		Node y = x.right;
+		Node T = y.left;
+		
+		//rotation
+		y.left = x;
+		x.right = T;
+		
+		//update heights
+		updateHeight(x);
+		updateHeight(y);
+		
+		//return new root
+		return y;
+	}
+	
+	private int getBalance(Node current){
+		return (current == null)? 0 : getHeight(current.right) - getHeight(current.left);
+	}
+	
+	public void insert(int insertValue){
+		root = insertRec (root, insertValue);
+	}
+	
+	
+	
+	
+	
+	
+	
+	private Node insertRec(Node current, int insertValue){
+		
+		//perform BST insertion
+		if (current == null){
+			return new Node(insertValue);
+		}
+		
+		if (insertValue < current.InsertValue){
+			current.left = insertRec(current.left, insertValue);
+		}
+		else if (insertValue > current.InsertValue){
+			current.right = insertRec(current.right, insertValue);
+		}
+		// no duplicates
+		else {
+			return current; 
+		}
+		
+		int balance = getBalance(current);
+		
+		//Left Left
+		if (balance < -1 && insertValue < current.left.InsertValue){
+			return rotateRight(current);
+		}
+		//Left Right
+		else if (balance < -1 && insertValue > current.left.InsertValue){
+			current.left = rotateLeft(current.left);
+			return rotateRight(current);
+		}
+		//Right Right
+		else if (balance > 1 && insertValue > current.right.InsertValue){
+			return rotateLeft(current);
+		}
+		//Right Left
+		else if (balance > 1 && insertValue < current.right.InsertValue){
+			current.right = rotateRight(current.right);
+			return rotateLeft(current);
+		}
+		//Unchanged
+		else{
+			updateHeight(current);
+			return current;
+		}
+	}
+	
+	// search for value
+	Node search(int searchVal, Node n) {
+		if (n != null) {
+			if (n.InsertValue == searchVal) {
+				keyFound = true;
+				foundNodePrint(n);
+				return n;
+			}
+			Node foundNode = search(searchVal, n.left);
+			if (foundNode == null) {
+				foundNode = search(searchVal, n.right);
+			}
+
+			return foundNode;
+
+		} else {
+
+			return null;
+		}
+
+	}
+
+	void foundNodePrint(Node n) {
+		System.out.println("Found: " + n.InsertValue);
+
+	}
+
+	
+
+	
+	
+	// print the traversals
+
+		// BST inorder
+		void inOrder(Node node) {
+			if (node != null) {
+				inOrder(node.left);
+				System.out.print(node.InsertValue + "  ");
+				inOrder(node.right);
+			}
+		}
+
+		// BST preorder
+		void preOrder(Node node) {
+			if (node != null) {
+				System.out.print(node.InsertValue + "  ");
+				preOrder(node.left);
+				preOrder(node.right);
+			}
+		}
+
+		// BST postorder
+		public void postOrder(Node node) {
+			if (node != null) {
+				postOrder(node.left);
+				postOrder(node.right);
+				System.out.print(node.InsertValue + "  ");
+			}
+		}
+	
+	//***********************************
+	
+	/*
 
 	// return the height of the node to build the AVL tree
 	int height(Node node) {
@@ -167,33 +384,7 @@ public class BinarySearchTree {
 
 	}
 
-	// print the traversals
-
-	// BST inorder
-	void inOrder(Node node) {
-		if (node != null) {
-			inOrder(node.left);
-			System.out.print(node.key + "  ");
-			inOrder(node.right);
-		}
-	}
-
-	// BST preorder
-	void preOrder(Node node) {
-		if (node != null) {
-			System.out.print(node.key + "  ");
-			preOrder(node.left);
-			preOrder(node.right);
-		}
-	}
-
-	// BST postorder
-	public void postOrder(Node node) {
-		if (node != null) {
-			postOrder(node.left);
-			postOrder(node.right);
-			System.out.print(node.key + "  ");
-		}
-	}
+	
+	*/
 
 }
